@@ -10,7 +10,7 @@ on:
 jobs:
   vm-job:
 # https://github.com/actions/virtual-environments/blob/macOS-12/20220516.1/images/macos/macos-12-Readme.md
-    runs-on: ubuntu-latest
+    runs-on: macos-12 # Monterey
     services:
       nginx:
         image: nginx:latest

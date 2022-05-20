@@ -11,9 +11,6 @@ jobs:
   vm-job:
 # https://github.com/actions/virtual-environments/blob/macOS-12/20220516.1/images/macos/macos-12-Readme.md
     runs-on: macos-12 # Monterey
-    services:
-      nginx:
-        image: nginx:latest
 
     steps:
     - uses: actions/checkout@v2
@@ -30,15 +27,11 @@ jobs:
     - name: Installing docker via brew
       run: brew install docker
 
-    - name: Wget test
-      run: wget -O - http://localhost/
-
     - name: Send greeting
       run: echo "Hello ${{ github.event.inputs.name }}"
   
   container-job:
-    needs: vm-job
-    runs-on: macos-12 # Monterey 
+    runs-on: ubuntu-latest
     container: ubuntu:22.04
     services:
       nginx:
@@ -76,4 +69,3 @@ jobs:
         if: always()
         run: docker stop nginx2
     
-   

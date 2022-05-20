@@ -47,7 +47,7 @@ jobs:
       - name: Install docker client
         run: |
           export DEBIAN_FRONTEND=noninteractive
-          apt-get update && apt-get install curl
+          apt-get update && apt-get install -y curl
           curl -fsSL https://get.docker.com -o get-docker.sh
           sh get-docker.sh
 

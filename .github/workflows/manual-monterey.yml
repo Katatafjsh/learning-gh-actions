@@ -10,8 +10,11 @@ on:
 jobs:
   vm-job:
     runs-on: macos-12 # Monterey
-    steps:
+    services:
+      nginx:
+        image: nginx:latest
 
+    steps:
     - name: System fingerprint
       run: |
         printf "My current shell - %s\n" "$SHELL"
@@ -22,18 +25,50 @@ jobs:
       run: /bin/bash -c "NONINTERACTIVE=1 $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     - name: Installing docker via brew
-      run: brew install --cask docker
+      run: brew install docker
+
+    - name: Wget test
+      run: wget -O - http://localhost/
 
     - name: Send greeting
       run: echo "Hello ${{ github.event.inputs.name }}"
   
   container-job:
     runs-on: macos-12 # Monterey
-    container: alpine:3.14
+    container: ubuntu:22.04
+    services:
+      nginx:
+        image: nginx:latest
     steps:
+      - name: System fingerprint
+        run: |
+          printf "My current shell - %s\n" "$SHELL"
+          uname -a
+          cat /proc/cpuinfo
+
+      - name: Install docker client
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update && apt-get install curl
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
+
+      - name: Run service container
+        run: docker run --rm --detach --network ${{ job.container.network }} --name nginx2 nginx:latest
+
+      - name: run wget in Docker container
+        run: |
+          docker run --rm --network ${{ job.container.network }w} alpine:3.15 wget -O - http://nginx/
+          docker run --rm --network ${{ job.container.network }} alpine:3.15 wget -O - http://nginx2/
+
+      - name: Show running containers
+        run: docker ps
+
+      - name: Inspect service container
+        run: docker inspect ${{ job.services.nginx.id }}
+
+      - name: Stop nginx2 container
+        if: always()
+        run: docker stop nginx2
     
-    - name: Run in container
-      run: |
-          echo "This job does specify a container."
-          echo "It runs in the container instead of the VM."
-          echo "Hello ${{ github.event.inputs.name }}"
+   

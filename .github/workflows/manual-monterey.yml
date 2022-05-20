@@ -33,7 +33,7 @@ jobs:
  #       password: ${{ secrets.DOCKER_PASSWORD }}
  #       registry: gcr.io
         image: alpine:latest
-       options: -v ${{ github.workspace }}:/work -e NAME=${{ github.event.inputs.name }}"
+        options: -v ${{ github.workspace }}:/work -e NAME=${{ github.event.inputs.name }}"
         run: |
           echo "Running from alpine container..."
           echo "Alpine: Hello ${NAME}"

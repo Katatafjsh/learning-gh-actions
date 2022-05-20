@@ -1,0 +1,15 @@
+name: Manual workflow [MacOS Monterey]
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Person to greet'
+        default: 'World'
+        required: true
+
+jobs:
+  greet:
+    runs-on: macos-12 # Monterey
+    steps:
+    - name: Send greeting
+      run: echo "Hello ${{ github.event.inputs.name }}"

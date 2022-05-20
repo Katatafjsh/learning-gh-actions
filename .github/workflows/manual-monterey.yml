@@ -58,7 +58,7 @@ jobs:
 
       - name: run wget in Docker container
         run: |
-          docker run --rm --network ${{ job.container.network }w} alpine:3.15 wget -O - http://nginx/
+          docker run --rm --network ${{ job.container.network }} alpine:3.15 wget -O - http://nginx/
           docker run --rm --network ${{ job.container.network }} alpine:3.15 wget -O - http://nginx2/
 
       - name: Show running containers

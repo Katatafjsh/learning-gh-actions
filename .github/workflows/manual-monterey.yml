@@ -11,5 +11,14 @@ jobs:
   greet:
     runs-on: macos-12 # Monterey
     steps:
+    - name: System fingerprint
+      run: |
+        printf "My current shell - %s\n" "$SHELL"
+        uname -a
+        sysctl -a | grep machdep.cpu
+    - name: Installing homebrew
+      run: /bin/bash -c "NONINTERACTIVE=1 $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    - name: Installing docker via brew
+      run: brew install docker
     - name: Send greeting
       run: echo "Hello ${{ github.event.inputs.name }}"
